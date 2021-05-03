@@ -9,11 +9,11 @@
 
           <v-layout row>
               <v-flex xs11>
-                  <v-text-field solo label="Write a new task and press enter" class="ml-3 mr-4" height="50px" > </v-text-field>
+                <v-text-field solo id="newTask" ref="newTask" label="Write a new task and press enter" class="ml-3 mr-4" height="50px"  v-on:keyup.enter="addTask"> </v-text-field>
               </v-flex>
 
               <v-flex xs1>
-                  <v-btn text height="50px" max-width="20px" class="blue--text" >+ Add</v-btn>
+                  <v-btn text height="50px" max-width="20px" class="blue--text" @click="addTask">+ Add</v-btn>
               </v-flex>
           </v-layout>
         <!-- End section -->
@@ -80,5 +80,17 @@
     name: 'HelloWorld',
 
     props: ['todoList'],
+
+    methods: {
+      //Get and send new task to todoList
+      addTask(){
+          let newTask = document.getElementById('newTask');
+
+          if(newTask.value){
+              this.$emit('addTask', newTask.value);
+              this.$refs.newTask.reset();
+          }
+      }
+    }
   }
 </script>

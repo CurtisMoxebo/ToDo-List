@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld :todoList= "todoList" />
+      <HelloWorld :todoList= "todoList" @addTask="addTask"/>
     </v-main>
   </v-app>
 </template>
@@ -61,5 +61,12 @@ export default {
         {task: 'Time for launch', isCompleted: true, isEditable: false}
     ],
   }),
+
+  methods: {
+    //addition of new task to todo list
+    addTask(text){
+          this.todoList.push({task: text, isCompleted: false, isEditable: false});
+      }
+  }
 };
 </script>
