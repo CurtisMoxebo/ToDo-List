@@ -26,9 +26,9 @@
           <!-- iterate and display the uncompleted tasks in todo list -->
           <div v-for="(item, index) in todoList" :key="`task-${index}`" >
               <v-layout row v-if="!item.isCompleted">
-                <v-flex xs1>
-                  <v-checkbox align="end" justify="end" :input-value="item.isCompleted" @click="completeTask(index)"></v-checkbox>
-                </v-flex>
+                  <v-flex xs1>
+                      <v-checkbox align="end" justify="end" :input-value="item.isCompleted" @click="completeTask(index)"></v-checkbox>
+                  </v-flex>
 
                 <v-flex xs10>
                   <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="20px" class= "black--text" :value="item.task"> </v-text-field>
@@ -53,9 +53,9 @@
             <!-- iterate and display the completed tasks in todo list -->
             <div v-for="(item, index) in todoList" :key="`task-${index}`">
               <v-layout row v-if="item.isCompleted">
-                <v-flex xs1>
-                  <v-checkbox :input-value="item.isCompleted"></v-checkbox>
-                </v-flex>
+                  <v-flex xs1>
+                      <v-checkbox :input-value="item.isCompleted" @click="reassignTask(index)"></v-checkbox>
+                  </v-flex>
 
                 <v-flex xs10>
                   <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" solo label="New task" min-height="50px" class= "text-decoration-line-through" :value="item.task"> </v-text-field>
@@ -79,6 +79,7 @@
   export default {
     name: 'HelloWorld',
 
+    //receive todo list from App.vue as a prop
     props: ['todoList'],
 
     methods: {
@@ -90,7 +91,17 @@
               this.$emit('addTask', newTask.value);
               this.$refs.newTask.reset();
           }
-      }
+      },
+
+      //Get and send a completed task to todoList
+      completeTask(index){
+          this.$emit('completeTask', index);
+      },
+
+      //Get and reassigne a task to todoList
+      reassignTask(index) {
+          this.$emit('reassignTask', index);
+      }, 
     }
   }
 </script>

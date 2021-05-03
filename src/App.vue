@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld :todoList= "todoList" @addTask="addTask"/>
+      <HelloWorld :todoList= "todoList" @addTask="addTask" @completeTask="completeTask" @reassignTask="reassignTask"/>
     </v-main>
   </v-app>
 </template>
@@ -63,10 +63,20 @@ export default {
   }),
 
   methods: {
-    //addition of new task to todo list
-    addTask(text){
+      //addition of new task to todo list
+      addTask(text){
           this.todoList.push({task: text, isCompleted: false, isEditable: false});
-      }
+      },
+
+      //set task to complete
+      completeTask(index){
+          this.todoList[index].isCompleted = true;
+      },
+
+      //set task to uncomplete
+      reassignTask(index){
+          this.todoList[index].isCompleted = false;
+      },
   }
 };
 </script>
