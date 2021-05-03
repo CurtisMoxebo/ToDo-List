@@ -30,19 +30,19 @@
                       <v-checkbox align="end" justify="end" :input-value="item.isCompleted" @click="completeTask(index)"></v-checkbox>
                   </v-flex>
 
-                <v-flex xs10>
-                  <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="20px" class= "black--text" :value="item.task"> </v-text-field>
-                </v-flex>
+                  <v-flex xs10>
+                      <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="20px" class= "black--text" :value="item.task"> </v-text-field>
+                  </v-flex>
 
-                <v-flex xs1 class="pl-4">
-                  <v-btn text height="25px" max-width="20px" class="green--text" @click="changeIsEditable(index)" >Edit</v-btn>
-                  <v-btn text height="25px" max-width="20px" class="red--text mt-2" @click="deleteTask(index)" >delete</v-btn>
-                </v-flex>
-            </v-layout>
+                  <v-flex xs1 class="pl-4">
+                      <v-btn text height="25px" max-width="20px" class="green--text" @click="changeIsEditable(index)" >Edit</v-btn>
+                      <v-btn text height="25px" max-width="20px" class="red--text mt-2" @click="deleteTask(index)" >delete</v-btn>
+                  </v-flex>
+              </v-layout>
 
-            <v-divider class="mb-4" v-if="!item.isCompleted"></v-divider>
-          </div>
-        </v-container>
+              <v-divider class="mb-4" v-if="!item.isCompleted"></v-divider>
+            </div>
+          </v-container>
         <!-- End section -->
 
         <!-- Section for completed task -->
@@ -57,21 +57,21 @@
                       <v-checkbox :input-value="item.isCompleted" @click="reassignTask(index)"></v-checkbox>
                   </v-flex>
 
-                <v-flex xs10>
-                  <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" solo label="New task" min-height="50px" class= "text-decoration-line-through" :value="item.task"> </v-text-field>
-                </v-flex>
+                  <v-flex xs10>
+                      <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="50px" class= "text-decoration-line-through" :value="item.task"> </v-text-field>
+                  </v-flex>
 
-                <v-flex xs1 class="pl-4">
-                  <v-btn text height="25px" width="20px" class="green--text mr-14" >Edit</v-btn>
-                  <v-btn text height="25px" width="20px" class="red--text mt-2 mr-14" >delete</v-btn>
-                </v-flex>
-            </v-layout>
+                  <v-flex xs1 class="pl-4">
+                      <v-btn text height="25px" width="20px" class="green--text mr-14" @click="changeIsEditable(index)">Edit</v-btn>
+                      <v-btn text height="25px" width="20px" class="red--text mt-2 mr-14" @click="deleteTask(index)">delete</v-btn>
+                  </v-flex>
+              </v-layout>
 
-            <v-divider class="mb-4" v-if="item.isCompleted"></v-divider>
-          </div>
+              <v-divider class="mb-4" v-if="item.isCompleted"></v-divider>
+            </div>
+            <!-- End section -->
+
         </v-container>
-        <!-- End section -->
-
     </v-card>
 </template>
 
@@ -83,10 +83,12 @@
     props: ['todoList'],
 
     methods: {
+      
       //Get and send new task to todoList
       addTask(){
           let newTask = document.getElementById('newTask');
 
+          //check if input is not empty first
           if(newTask.value){
               this.$emit('addTask', newTask.value);
               this.$refs.newTask.reset();
@@ -98,10 +100,21 @@
           this.$emit('completeTask', index);
       },
 
-      //Get and reassigne a task to todoList
+      //Get and send task to be reassigned a task to todoList
       reassignTask(index) {
           this.$emit('reassignTask', index);
       }, 
+
+      //Get and send edited task to todoList
+      changeIsEditable(index){
+          let editedTask = document.getElementById("task"+index);
+          this.$emit('changeIsEditable', index, editedTask.value);
+      },
+
+      //Get and send task to be deleted to todoList
+      deleteTask(index){
+          this.$emit('deleteTask', index);
+      },
     }
   }
 </script>

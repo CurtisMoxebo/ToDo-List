@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld :todoList= "todoList" @addTask="addTask" @completeTask="completeTask" @reassignTask="reassignTask"/>
+        <HelloWorld :todoList= "todoList" @addTask="addTask" @completeTask="completeTask" @reassignTask="reassignTask" @changeIsEditable="changeIsEditable" @deleteTask="deleteTask" />
     </v-main>
   </v-app>
 </template>
@@ -54,29 +54,47 @@ export default {
   },
 
   data: () => ({
-    //Create todo list
-    todoList : [
-        {task: 'Go to work', isCompleted: false, isEditable: false},
-        {task: 'Do your grocery', isCompleted: false, isEditable: false},
-        {task: 'Time for launch', isCompleted: true, isEditable: false}
-    ],
+      //Create todo list
+      todoList : [
+          {task: 'Go to work', isCompleted: false, isEditable: false},
+          {task: 'Do your grocery', isCompleted: false, isEditable: false},
+          {task: 'Time for launch', isCompleted: true, isEditable: false}
+      ],
   }),
 
   methods: {
-      //addition of new task to todo list
+      //Addition of new task to todo list
       addTask(text){
           this.todoList.push({task: text, isCompleted: false, isEditable: false});
       },
 
-      //set task to complete
+      //Set task to complete
       completeTask(index){
           this.todoList[index].isCompleted = true;
       },
 
-      //set task to uncomplete
+      //Set task to uncomplete
       reassignTask(index){
           this.todoList[index].isCompleted = false;
       },
+
+      //Edit and save task to todo list
+      changeIsEditable(index, text){
+          console.log('im in here');
+          if(this.todoList[index].isEditable){
+              this.todoList[index].task = text;
+              this.todoList[index].isEditable = false;
+          }
+
+          else{
+              this.todoList[index].isEditable = true;
+          }
+      },
+
+      //Delete task from todo list
+      deleteTask(index){
+          this.todoList.splice(index, 1);
+      }
   }
 };
 </script>
