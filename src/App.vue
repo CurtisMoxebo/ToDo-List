@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <HelloWorld :todoList= "todoList" />
     </v-main>
   </v-app>
 </template>
@@ -54,7 +54,12 @@ export default {
   },
 
   data: () => ({
-    //
+    //Create todo list
+    todoList : [
+        {task: 'Go to work', isCompleted: false, isEditable: false},
+        {task: 'Do your grocery', isCompleted: false, isEditable: false},
+        {task: 'Time for launch', isCompleted: true, isEditable: false}
+    ],
   }),
 };
 </script>
