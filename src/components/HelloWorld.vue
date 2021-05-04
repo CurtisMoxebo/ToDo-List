@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="6" width="650px" class="mx-auto px-10 my-5"> 
+    <v-card elevation="6" max-width="650px" class="mx-auto px-10 my-5"> 
         <!-- Title -->
         <h2 class="text-center font-weight-bold headline py-2">Todo List</h2>
 
@@ -23,24 +23,29 @@
           <v-divider color="black" class="mb-2" ></v-divider>
 
           <v-container>
-          <!-- iterate and display the uncompleted tasks in todo list -->
-          <div v-for="(item, index) in todoList" :key="`task-${index}`" >
-              <v-layout row v-if="!item.isCompleted">
-                  <v-flex xs1>
-                      <v-checkbox align="end" justify="end" :input-value="item.isCompleted" @click="completeTask(index)"></v-checkbox>
-                  </v-flex>
+            <!-- iterate and display the uncompleted tasks in todo list -->
+            <div v-for="(item, index) in todoList" :key="`task-${index}`" >
+                <v-layout row v-if="!item.isCompleted">
+                    <v-flex xs1>
+                        <v-checkbox align="end" justify="end" :input-value="item.isCompleted" @click="completeTask(index)"></v-checkbox>
+                    </v-flex>
 
-                  <v-flex xs10>
-                      <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="20px" class= "black--text" :value="item.task"> </v-text-field>
-                  </v-flex>
+                    <v-flex xs10>
+                        <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="20px" class="mt-2" :value="item.task"> 
+                                <template slot="append" v-if="item.isEditable">
+                                    <v-icon color="green" @click="moveTaskUp(index)">mdi-arrow-up</v-icon>
+                                    <v-icon color="red" @click="moveTaskDown(index)">mdi-arrow-down</v-icon>
+                                </template>
+                        </v-text-field>
+                    </v-flex>
 
-                  <v-flex xs1 class="pl-4">
-                      <v-btn text height="25px" max-width="20px" class="green--text" @click="changeIsEditable(index)" >Edit</v-btn>
-                      <v-btn text height="25px" max-width="20px" class="red--text mt-2" @click="deleteTask(index)" >delete</v-btn>
-                  </v-flex>
-              </v-layout>
+                    <v-flex xs1 class="pl-4">
+                        <v-btn text height="25px" max-width="20px" class="green--text" @click="changeIsEditable(index)" >Edit</v-btn>
+                        <v-btn text height="25px" max-width="20px" class="red--text mt-2" @click="deleteTask(index)" >delete</v-btn>
+                    </v-flex>
+                </v-layout>
 
-              <v-divider class="mb-4" v-if="!item.isCompleted"></v-divider>
+                <v-divider class="mb-4" v-if="!item.isCompleted"></v-divider>
             </div>
           </v-container>
         <!-- End section -->
@@ -51,25 +56,30 @@
 
           <v-container>
             <!-- iterate and display the completed tasks in todo list -->
-            <div v-for="(item, index) in todoList" :key="`task-${index}`">
-              <v-layout row v-if="item.isCompleted">
-                  <v-flex xs1>
-                      <v-checkbox :input-value="item.isCompleted" @click="reassignTask(index)"></v-checkbox>
-                  </v-flex>
+            <div v-for="(item, index) in todoList" :key="`task-${index}`" >
+                <v-layout row v-if="item.isCompleted">
+                    <v-flex xs1>
+                        <v-checkbox align="end" justify="end" :input-value="item.isCompleted" @click="reassignTask(index)"></v-checkbox>
+                    </v-flex>
 
-                  <v-flex xs10>
-                      <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="50px" class= "text-decoration-line-through" :value="item.task"> </v-text-field>
-                  </v-flex>
+                    <v-flex xs10>
+                        <v-text-field :flat="!item.isEditable" :disabled="!item.isEditable" v-on:keyup.enter="changeIsEditable(index)" solo :id="'task'+index" label="New task" min-height="20px" class="text-decoration-line-through mt-2" :value="item.task"> 
+                                <template slot="append" v-if="item.isEditable">
+                                    <v-icon color="green" @click="moveTaskUp(index)">mdi-arrow-up</v-icon>
+                                    <v-icon color="red" @click="moveTaskDown(index)">mdi-arrow-down</v-icon>
+                                </template>
+                        </v-text-field>
+                    </v-flex>
 
-                  <v-flex xs1 class="pl-4">
-                      <v-btn text height="25px" width="20px" class="green--text mr-14" @click="changeIsEditable(index)">Edit</v-btn>
-                      <v-btn text height="25px" width="20px" class="red--text mt-2 mr-14" @click="deleteTask(index)">delete</v-btn>
-                  </v-flex>
-              </v-layout>
+                    <v-flex xs1 class="pl-4">
+                        <v-btn text height="25px" max-width="20px" class="green--text" @click="changeIsEditable(index)" >Edit</v-btn>
+                        <v-btn text height="25px" max-width="20px" class="red--text mt-2" @click="deleteTask(index)" >delete</v-btn>
+                    </v-flex>
+                </v-layout>
 
-              <v-divider class="mb-4" v-if="item.isCompleted"></v-divider>
+                <v-divider class="mb-4" v-if="item.isCompleted"></v-divider>
             </div>
-            <!-- End section -->
+        <!-- End section -->
 
         </v-container>
     </v-card>
@@ -115,6 +125,16 @@
       deleteTask(index){
           this.$emit('deleteTask', index);
       },
+
+      //Get task to be positioned up in todoList
+      moveTaskUp(index){
+          this.$emit('moveTaskUp', index);
+      },
+
+      //Get task to be positioned down in todoList
+      moveTaskDown(index){
+          this.$emit('moveTaskDown', index);
+      }
     }
   }
 </script>

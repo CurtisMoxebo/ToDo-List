@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-        <HelloWorld :todoList= "todoList" @addTask="addTask" @completeTask="completeTask" @reassignTask="reassignTask" @changeIsEditable="changeIsEditable" @deleteTask="deleteTask" />
+        <HelloWorld :todoList="todoList" @addTask="addTask" @completeTask="completeTask" @reassignTask="reassignTask" @changeIsEditable="changeIsEditable" @deleteTask="deleteTask" @moveTaskUp="moveTaskUp" @moveTaskDown="moveTaskDown"/>
     </v-main>
   </v-app>
 </template>
@@ -63,9 +63,17 @@ export default {
   }),
 
   methods: {
+      //Sort todo list with uncompleted items first
+      sortToDoList(){
+          this.todoList.sort((a, b) => {
+              return (a.isCompleted === b.isCompleted) ? 0 : a.isCompleted ? 1 : -1;
+          });
+      },
+
       //Addition of new task to todo list
       addTask(text){
           this.todoList.push({task: text, isCompleted: false, isEditable: false});
+          this.sortToDoList();
       },
 
       //Set task to complete
@@ -80,7 +88,6 @@ export default {
 
       //Edit and save task to todo list
       changeIsEditable(index, text){
-          console.log('im in here');
           if(this.todoList[index].isEditable){
               this.todoList[index].task = text;
               this.todoList[index].isEditable = false;
@@ -89,11 +96,31 @@ export default {
           else{
               this.todoList[index].isEditable = true;
           }
+          this.sortToDoList();
       },
 
       //Delete task from todo list
       deleteTask(index){
           this.todoList.splice(index, 1);
+          this.sortToDoList();
+      },
+
+      //Move task up in todo list
+      moveTaskUp(index){
+          if(this.todoList[index-1]){
+              if(this.todoList[index].isCompleted === this.todoList[index-1].isCompleted){
+                  this.todoList.splice(index-1, 2, this.todoList[index], this.todoList[index-1]);
+              }
+          }
+      },
+
+      //Move task up in todo list
+      moveTaskDown(index){    
+          if(this.todoList[index+1]){
+              if(this.todoList[index].isCompleted === this.todoList[index+1].isCompleted){
+                  this.todoList.splice(index, 2, this.todoList[index+1], this.todoList[index]);
+              }
+          }
       }
   }
 };
